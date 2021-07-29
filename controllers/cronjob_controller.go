@@ -20,19 +20,19 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-logr/logr"
+	batch "github.com/heheh13/kubebuilder-controller/api/v1"
+	"github.com/robfig/cron"
+	kbatch "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"sort"
-	"time"
-
 	"k8s.io/apimachinery/pkg/runtime"
+	ref "k8s.io/client-go/tools/reference"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
-
-	batch "github.com/heheh13/kubebuilder-controller/api/v1"
-	kbatch "k8s.io/api/batch/v1"
+	"sort"
+	"time"
 )
+
 /*
 Next, we'll need a Clock, which will allow us to fake timing in our tests.
 */
@@ -81,8 +81,10 @@ var (
 )
 
 func (r *CronJobReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	log := r.Log.WithValues("cronjob", req.NamespacedName)
+	fmt.Println(req.String())
 
+	log := logr.FromContext(ctx)
+	fmt.Println("comes here")
 	/*
 		### 1: Load the CronJob by name
 		We'll fetch the CronJob using our client.  All client methods take a
